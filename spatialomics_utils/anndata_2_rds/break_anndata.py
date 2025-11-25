@@ -11,7 +11,7 @@ OUTPUT_DIR = argv[2]
 def _write_metadata(adata, output_dir):
     print ("Writing the adata.obs")
     adata.obs.to_csv(
-        os.path.join(output_dir, "metadata.csv"), 
+        os.path.join(output_dir, "obs.csv"), 
         index=True
     )
     return
@@ -23,7 +23,7 @@ def _write_embedding(adata, output_dir):
         df = pd.DataFrame(
             adata.obsm[key], 
             index=adata.obs_names, 
-            columns=[f"{key}_{i}" for i in range(adata.obsm[key].shape[1])]
+            columns=[f"{key}_{i + 1}" for i in range(adata.obsm[key].shape[1])]
         )
         df.to_csv(
             os.path.join(output_dir, "embeddings", f"{key}.csv"), 
