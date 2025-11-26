@@ -14,3 +14,6 @@ Functions for spatial omics data analysis
 
 ![segment and dilate](img/demo.gif)
 
+### 3. Convert Anndata <-> Rds
+- Mitigate dependency on other pre-build packages
+- Break anndata/rds object into small components (.mtx, .csv), then build up rds/anndata
