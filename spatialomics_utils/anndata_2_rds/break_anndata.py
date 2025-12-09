@@ -49,6 +49,14 @@ def _write_matrix(adata, output_dir):
         os.path.join(output_dir, "X.mtx"), 
         adata.X.T
     )
+    
+    if adata.raw.X.shape == adata.X.shape:
+        print ("Writing the adata.raw.X")
+        scipy.io.mmwrite(
+            os.path.join(output_dir, "layers", "raw_X.mtx"), 
+            adata.raw.X.T
+        )
+
     for layer in adata.layers.keys():
         print (f"Writing the adata.layers[{layer}]")
         scipy.io.mmwrite(
