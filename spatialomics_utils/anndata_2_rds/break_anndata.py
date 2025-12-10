@@ -49,7 +49,7 @@ def _write_matrix(adata, output_dir):
         os.path.join(output_dir, "X.mtx"), 
         adata.X.T
     )
-    
+
     if adata.raw.X.shape == adata.X.shape:
         print ("Writing the adata.raw.X")
         scipy.io.mmwrite(
@@ -71,7 +71,9 @@ def break_anndata(adata, output_dir):
     _write_metadata(adata, output_dir)
     _write_embedding(adata, output_dir)
     _write_var(adata, output_dir)
+    print ("Done!")
     return
 
+print ('Reading AnnData object')
 adata = scanpy.read_h5ad(ADATA_PATH)
 break_anndata(adata, OUTPUT_DIR)

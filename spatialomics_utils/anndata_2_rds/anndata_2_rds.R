@@ -35,11 +35,17 @@ read_embedding <- function(input_dir) {
 read_matrix <- function(input_dir) {
     print ("Reading matrices")
     all_matrices <- list()
+
+    print ("- Reading X matrix")
     all_matrices[["X"]] <- readMM(file.path(input_dir, "X.mtx"))
     for (file in list.files(
         file.path(input_dir, "layers"), pattern="*.mtx"
     )) {
         layer_name <- gsub(".mtx", "", file)
+        
+        print (
+            paste("- Reading layer:", layer_name)
+        )
         layer_data <- readMM(file.path(input_dir, "layers", file))
         all_matrices[[layer_name]] <- layer_data
     }
@@ -55,12 +61,14 @@ build_rds <- function(input_dir, output_rds) {
     row.names(matrices[["X"]]) <- row.names(var)
     colnames(matrices[["X"]]) <- row.names(obs)
 
+    print ("Creating Seurat object")
     seurat_obj <- CreateSeuratObject(
         counts = matrices[["X"]],
         meta.data = obs,
         assay = "RNA"
     )
     
+    print ("Adding additional matrix layers")
     for (layer_name in names(matrices)) {
         if (layer_name != "X") {
             row.names(matrices[[layer_name]]) <- row.names(var)
@@ -69,6 +77,7 @@ build_rds <- function(input_dir, output_rds) {
         }
     }
     
+    print ("Adding embeddings")
     for (embedding_name in names(embeddings)) {
         seurat_obj[[embedding_name]] <- CreateDimReducObject(
             embeddings = embeddings[[embedding_name]],
@@ -78,6 +87,7 @@ build_rds <- function(input_dir, output_rds) {
 
     print ("Saving RDS file")
     saveRDS(seurat_obj, file = output_rds)
+    print ("Done!")
 }
 
 build_rds(input_dir, output_rds)
