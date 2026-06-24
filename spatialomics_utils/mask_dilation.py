@@ -28,20 +28,24 @@ def dilate_coords(
         spatial_coords,      # [[y, x], [y, x], ...]
         labels,
         radius: int,
-        data_type=np.uint16,
     ):
-    assert spatial_coords.dtype == 'int'
     assert spatial_coords.shape[0] == labels.shape[0]
 
-    ## prepare blank img frame from spatial coords
-    mask = np.zeros(
-        shape=spatial_coords.max(axis=0) + 1,
-        dtype=data_type
-    )
-    mask[spatial_coords[:, 0], spatial_coords[:, 1]] = labels
-    
-    mask = dilate_mask(
-        mask,
-        radius
-    )
-    return mask[spatial_coords[:, 0], spatial_coords[:, 1]]
+    unknown_idx = np.where(labels == 0)[0]
+    unknown_coords = spatial_coords[unknown_idx]
+
+    known_idx = np.where(labels != 0)[0]
+    known_coords = spatial_coords[known_idx]
+
+    tree = scipy.spatial.cKDTree(known_coords)
+    distances, nearest_pos = tree.query(unknown_coords, k=1)
+
+    nearest_known_idx = known_idx[nearest_pos]
+    nearest_known_labels = labels[nearest_known_idx]
+    nearest_known_labels[
+        distances > radius
+    ] = 0
+
+    dilated_labels = labels.copy()
+    dilated_labels[unknown_idx] = nearest_known_labels
+    return dilated_labels
