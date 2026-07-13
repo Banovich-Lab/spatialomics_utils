@@ -48,6 +48,10 @@ def _read_matrix(input_dir, matrix_file):
 
 def _add_layers(adata, input_dir):
     print ("Reading the layers")
+    if not os.path.exists(input_dir):
+        print ("No layers directory found, skipping")
+        return adata
+    
     for file in os.listdir(input_dir):
         if file.endswith(".mtx"):
             key = file[:-4]
