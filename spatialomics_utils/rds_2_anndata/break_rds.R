@@ -51,12 +51,15 @@ write_embeddings <- function(seurat_obj, output_dir) {
 }
 
 write_assay5_matrix <- function(seurat_obj, assay_name, output_dir) {
-    print (paste0("Writing the assay layers for assay: ", assay_name))
+    print (paste0("Writing the assay5 layers for assay: ", assay_name))
     for (s_assay in names(seurat_obj@assays[[assay_name]]@layers)) {
         s_name <- paste0(assay_name, '_', s_assay)
-        Matrix::writeMM(
-            seurat_obj@assays[[assay_name]]@layers[[s_assay]],
-            file.path(output_dir, paste0(s_name, ".mtx"))
+        print (paste0("Layer name: ", s_name))
+        try (
+            Matrix::writeMM(
+                seurat_obj@assays[[assay_name]]@layers[[s_assay]],
+                file.path(output_dir, paste0(s_name, ".mtx"))
+            )
         )
     }
     return
@@ -64,6 +67,7 @@ write_assay5_matrix <- function(seurat_obj, assay_name, output_dir) {
 
 write_assay_matrix <- function(seurat_obj, assay_name, output_dir) {
     print (paste0("Writing the assay layers for assay: ", assay_name))
+    print ('Writing counts')
     try (
         Matrix::writeMM(
             seurat_obj@assays[[assay_name]]@counts,
@@ -73,6 +77,7 @@ write_assay_matrix <- function(seurat_obj, assay_name, output_dir) {
             )
         )
     )
+    print ('Writing data')
     try (
         Matrix::writeMM(
             seurat_obj@assays[[assay_name]]@data,
@@ -82,6 +87,7 @@ write_assay_matrix <- function(seurat_obj, assay_name, output_dir) {
             )
         )
     )
+    print ('Writing scale.data')
     try (
         Matrix::writeMM(
             seurat_obj@assays[[assay_name]]@scale.data,
