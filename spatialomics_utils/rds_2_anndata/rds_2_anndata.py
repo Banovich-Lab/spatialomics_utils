@@ -12,7 +12,8 @@ ADATA_PATH = argv[2]
 def _read_metadata(input_dir):
     print ("Reading the metadata")
     return pd.read_csv(
-        os.path.join(input_dir, "obs.csv"), 
+        os.path.join(input_dir, "obs.tsv"), 
+        sep="\t",
         index_col=0
     )
 

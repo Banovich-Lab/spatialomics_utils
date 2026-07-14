@@ -18,11 +18,13 @@ write_features <- function(features_slot, output_dir) {
 
 write_metadata <- function(meta_slot, output_dir) {
     print ("Writing the obs metadata")
-    write.csv(
+    ## Change to tab-separated file to avoid issues with commas in metadata
+    write.table(
         meta_slot,
-        file.path(output_dir, "obs.csv"),
-        row.names=TRUE,
-        quote=FALSE
+        file.path(output_dir, "obs.tsv"),
+        sep = "\t",
+        row.names = TRUE,
+        quote = FALSE
     )
     return
 }
