@@ -5,7 +5,7 @@ import numpy as np
 
 def lazy_load(
         tif_path: str, 
-        level: int, 
+        level: str, 
         ystart: int, 
         yend: int, 
         xstart: int, 
@@ -18,7 +18,7 @@ def lazy_load(
     ----------
     tif_path : str
         Path to the OME-TIFF file.
-    level : int
+    level : str
         The level of the pyramid to load.
     ystart : int
         The starting y-coordinate.
