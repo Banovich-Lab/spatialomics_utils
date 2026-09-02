@@ -79,9 +79,14 @@ build_rds <- function(input_dir, output_rds) {
     
     print ("Adding embeddings")
     for (embedding_name in names(embeddings)) {
-        seurat_obj[[embedding_name]] <- CreateDimReducObject(
-            embeddings = embeddings[[embedding_name]],
-            assay = "RNA"
+        tryCatch(
+            seurat_obj[[embedding_name]] <- CreateDimReducObject(
+                embeddings = embeddings[[embedding_name]],
+                assay = "RNA"
+            ),
+            error = function(e) {
+                print(paste("Error adding embedding", embedding_name, ":", e$message))
+            }
         )
     }
 
