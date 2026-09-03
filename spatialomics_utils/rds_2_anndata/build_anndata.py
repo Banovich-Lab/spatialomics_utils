@@ -1,4 +1,27 @@
 import os
+import subprocess
+import sys
+
+
+def _ensure_package(module_name, package_name=None):
+    package_name = package_name or module_name
+    try:
+        __import__(module_name)
+    except ImportError:
+        print(f"Installing missing Python package: {package_name}")
+        subprocess.check_call([
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            package_name,
+        ])
+
+
+_ensure_package("scipy")
+_ensure_package("anndata")
+_ensure_package("pandas")
+
 import scipy
 import anndata
 import pandas as pd

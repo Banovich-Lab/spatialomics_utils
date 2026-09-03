@@ -1,7 +1,19 @@
-library(Seurat)
-library(Matrix)
+ensure_package <- function(package_name) {
+    if (!requireNamespace(package_name, quietly = TRUE)) {
+        print(paste("Installing missing R package:", package_name))
+        install.packages(package_name, repos = "https://cloud.r-project.org")
+    }
+    suppressPackageStartupMessages(library(package_name, character.only = TRUE))
+}
+
+ensure_package("Matrix")
+ensure_package("Seurat")
 
 args <- commandArgs(trailingOnly=TRUE)
+if (length(args) != 2) {
+    stop("Usage: build_rds.R YOUR_INPUT_DIR OUT_RDS_PATH")
+}
+
 input_dir <- args[1]
 output_rds <- args[2]
 

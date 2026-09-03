@@ -1,9 +1,35 @@
 import os
+import subprocess
+import sys
+
+
+def _ensure_package(module_name, package_name=None):
+    package_name = package_name or module_name
+    try:
+        __import__(module_name)
+    except ImportError:
+        print(f"Installing missing Python package: {package_name}")
+        subprocess.check_call([
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            package_name,
+        ])
+
+
+_ensure_package("scipy")
+_ensure_package("scanpy")
+_ensure_package("pandas")
+
 import scipy
 import scanpy
 import pandas as pd
 
 from sys import argv
+
+if len(argv) != 3:
+    raise SystemExit("Usage: break_anndata.py YOUR_ADATA_PATH YOUR_OUTPUT_DIR")
 
 ADATA_PATH = argv[1]
 OUTPUT_DIR = argv[2]
